@@ -75,9 +75,9 @@ jobs:
           name: Scan frontend
           command: |
             cd ./frontend
-            npm audit fix --force
-            npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
+            npm audit fix --audit-level=critical --force
+            
   scan-backend:
     docker:
       # Docker image that supports NodeJS
@@ -90,9 +90,8 @@ jobs:
           name: Scan backend
           command: |
             cd ./backend
-            npm audit fix --force
-            npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
+            npm audit fix --audit-level=critical --force
 workflows:
   default:
     jobs:
