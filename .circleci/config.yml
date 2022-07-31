@@ -239,16 +239,15 @@ jobs:
             npm run migrations > migrations_log.txt
             cat ./migrations_log.txt
       - run:
-          name: Send migration status to kvdb
-          working_directory: ./backend          
+          name: Send migration status to kvdb         
           command: |
             if grep "has been executed successfully" ./backend/migrations_log.txt;
             then
               echo "Database migration has been executed successfully"
-              curl https://kvdb.io/Nu6oBUD5FWeLekYt2usN4c/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d 'success'
+              curl -k https://kvdb.io/Nu6oBUD5FWeLekYt2usN4c/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d 'success'
             else
               echo "Database migration has failed, verify DB setup!"
-              curl https://kvdb.io/Nu6oBUD5FWeLekYt2usN4c/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d 'failure'
+              curl -k https://kvdb.io/Nu6oBUD5FWeLekYt2usN4c/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d 'failure'
             fi
       - destroy_environment:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}  
@@ -327,16 +326,16 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
+#      - build-frontend
+#      - build-backend
+#      - test-frontend:
+#          requires: [build-frontend]
+#      - test-backend:
+#          requires: [build-backend]
+#      - scan-backend:
+#          requires: [build-backend]
+#      - scan-frontend:
+#          requires: [build-frontend]
       - deploy-infrastructure
 #          filters:
 #            branches:
