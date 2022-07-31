@@ -312,7 +312,7 @@ jobs:
             apk add --update npm ansible rsync openssh nodejs
             apk add --no-cache python3 py3-pip \
               && pip3 install --upgrade pip \
-              && pip install awscli
+              && pip3 install awscli
       - run:
           name: Deploy backend
           command: |
