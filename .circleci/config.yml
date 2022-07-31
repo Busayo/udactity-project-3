@@ -343,8 +343,10 @@ jobs:
           name: Backend smoke test.
           working_directory: ./backend
           command: |
-            export BACKEND_URL=$(curl --insecure https://kvdb.io/Nu6oBUD5FWeLekYt2usN4c/BACKEND_IP_${CIRCLE_WORKFLOW_ID:0:7})
-            curl "$BACKEND_URL/api/status"
+            BACKEND_IP=$(curl --insecure https://kvdb.io/Nu6oBUD5FWeLekYt2usN4c/BACKEND_IP_${CIRCLE_WORKFLOW_ID:0:7})
+            API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            curl -s "${API_URL}/api/status" -v
 
 workflows:
   default:
