@@ -367,10 +367,18 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            pwd
-            tar czf backend.tar.gz backend/ 
+            cd backend
+            npm i
+            npm run build
+            cd ..
+            tar -C backend -czvf artifact.tar.gz .
+            mkdir -p ~/project/ .circleci/ansible/roles/deploy/files
+            cp artifact.tar.gz .circleci/ansible/roles/deploy/files
+            cd .circleci/ansible
+            cat inventory.txt
             export ANSIBLE_HOST_KEY_CHECKING=false
-            ansible-playbook -i ./.circleci/ansible/inventory.txt ./.circleci/ansible/deploy-backend.yml -vvv
+            ansible-playbook deploy-backend.yml -i inventory.txt
+            
       - save_cache:
           paths: [backend/node-modules]
           key: backend-build-cache
