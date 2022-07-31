@@ -321,6 +321,26 @@ jobs:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert_migrations:
           workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
+  smoke-test:
+    docker:
+      # Lightweight Docker image
+      - image: alpine:latest 
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install dependencies
+          working_directory: /tmp
+          command: |
+            apk add --update curl nodejs npm
+            pip install awscli
+      - run:
+          name: Backend smoke test.
+          working_directory: ./backend
+          command: |
+            export BACKEND_URL=$(curl --insecure https://kvdb.io/Nu6oBUD5FWeLekYt2usN4c/BACKEND_IP_${CIRCLE_WORKFLOW_ID:0:7})
+            curl "$BACKEND_URL/api/status"
 
 workflows:
   default:
