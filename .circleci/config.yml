@@ -224,7 +224,6 @@ jobs:
           at: .
       - run:
           name: Run database migration
-          working_directory: ./backend
           command: |
             cd ./backend
             pwd
