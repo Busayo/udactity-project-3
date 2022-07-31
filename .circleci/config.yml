@@ -176,16 +176,16 @@ jobs:
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
-      - run:
-          name: Send backend IP to memstash
-          command: |
-            pwd
-            BACKEND_IP=$(aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --output text)
-            echo "BACKEND_IP=${BACKEND_IP}"
-            curl https://kvdb.io/Nu6oBUD5FWeLekYt2usN4c/BACKEND_IP_${CIRCLE_WORKFLOW_ID:0:7}  -d '$BACKEND_IP'
+#      - run:
+#          name: Send backend IP to memstash
+#          command: |
+#            pwd
+#            BACKEND_IP=$(aws ec2 describe-instances \
+#              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+#              --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+#              --output text)
+#            echo "BACKEND_IP=${BACKEND_IP}"
+#            curl https://kvdb.io/Nu6oBUD5FWeLekYt2usN4c/BACKEND_IP_${CIRCLE_WORKFLOW_ID:0:7}  -d '$BACKEND_IP'
       - run:
           name: Add backend ip to ansible inventory
           working_directory: ./.circleci/ansible
@@ -222,12 +222,24 @@ jobs:
             apk add --update ansible
       - run:
           name: Configure backend server
-          working_directory: ./.circleci/ansible
           command: |
-            pwd &&
-            ls -la
-            cat inventory.txt
-            ansible-playbook -i inventory.txt configure-server.yml
+            echo NODE_ENV=production > ./backend/.env
+            echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> ./backend/.env
+            echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR >> ./backend/.env
+            echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> ./backend/.env
+            echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> ./backend/.env
+            echo TYPEORM_HOST=$TYPEORM_HOST >> ./backend/.env
+            echo TYPEORM_PORT=$TYPEORM_PORT >> ./backend/.env
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ./backend/.env
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ./backend/.env
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ./backend/.env
+            cat ./backend/.env
+            cd ./.circleci/ansible
+            ansible-playbook configure-server.yml -i inventory.txt
+      - persist_to_workspace:
+          root:  .
+          paths:
+            - backend/.env
 #      - destroy_environment:
 #          workflowID: ${CIRCLE_WORKFLOW_ID:0:7}
             
