@@ -28,7 +28,7 @@
 
   - name: "Extract backend artifact"
     unarchive:
-      src: files/backend.tar.gz
+      src: files/artifact.tar.gz
       dest: /home/ubuntu
 
   - name: "start server"
