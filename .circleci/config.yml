@@ -381,7 +381,7 @@ jobs:
 
   smoke-test:
     docker:
-      - image: amazon/aws-cli
+      - image: alpine:latest 
     steps:
       - checkout
       - add_ssh_keys:
@@ -391,7 +391,11 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            yum install -y tar gzip
+            apk --no-cache add curl
+            apk add --update npm
+            apk add --no-cache python3 py3-pip \
+              && pip3 install --upgrade pip \
+              && pip install awscli
       - run:
           name: Backend smoke test.
           working_directory: ./backend
@@ -416,7 +420,7 @@ jobs:
             else
               exit 1
             fi
-      - destroy_environment
+#      - destroy_environment
       - revert_migrations
 
 
