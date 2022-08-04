@@ -1,4 +1,4 @@
-###Udacity Cloud DevOps Engineer Nanodegree###
+### Udacity Cloud DevOps Engineer Nanodegree ###
 
 ## Give your Application Auto-Deploy Superpowers
 
